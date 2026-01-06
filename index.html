@@ -1,46 +1,168 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portfólio Profissional Geral - Rodrigo Brayner</title>
-    <style>
-        body
-        {
-            background-image: url(imagens/img_01.jpg);
-            background-size: 90%;
-            background-repeat: no-repeat;
-            background-position: center;
-            background-attachment: fixed;
-        }
-        #setaEsquerda img {
-            width: 50px;
-            height: 50px;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Rodrigo Brayner — Portfólio</title>
 
-        #setaDireita img {
-            width: 50px;
-            height: 50px;
-        }
-        #setaEsquerda, #setaDireita {
-            position: absolute;
-            top: 50%;
-        }
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      background: #000;
+      overflow: hidden;
+      font-family: Arial, Helvetica, sans-serif;
+    }
 
-        #setaDireita {
-            right: 1%;
-        }
-        #setaEsquerda {
-            left: 1%;
-        }
-    </style>
+    /* Área principal */
+    #viewer {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #000;
+    }
+
+    /* Slide ocupa a tela sem distorcer */
+    #slide {
+      width: 100vw;
+      height: 100vh;
+      object-fit: contain;
+      user-select: none;
+      -webkit-user-drag: none;
+    }
+
+    /* Setas */
+    .nav {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 72px;
+      height: 72px;
+      cursor: pointer;
+      opacity: 0.7;
+      filter: drop-shadow(0 0 10px rgba(0,0,0,0.6));
+      z-index: 10;
+      user-select: none;
+      -webkit-user-drag: none;
+    }
+    .nav:hover { opacity: 1; }
+
+    #prev { left: 18px; }
+    #next { right: 18px; }
+
+    /* Barra inferior */
+    #bar {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      padding: 10px 14px;
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      justify-content: space-between;
+      background: linear-gradient(to top, rgba(0,0,0,0.75), rgba(0,0,0,0));
+      z-index: 20;
+    }
+
+    #counter {
+      color: #fff;
+      font-size: 14px;
+      opacity: 0.9;
+    }
+
+    #actions {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .btn {
+      color: #fff;
+      text-decoration: none;
+      font-size: 14px;
+      padding: 8px 12px;
+      border: 1px solid rgba(255,255,255,0.35);
+      border-radius: 8px;
+      background: rgba(0,0,0,0.35);
+      backdrop-filter: blur(4px);
+    }
+    .btn:hover { border-color: rgba(255,255,255,0.7); }
+
+    /* Mobile: setas menores */
+    @media (max-width: 768px) {
+      .nav { width: 54px; height: 54px; }
+      #prev { left: 10px; }
+      #next { right: 10px; }
+    }
+  </style>
 </head>
+
 <body>
-    <div id="setaEsquerda">
-        <a href="pagina_12.html"> <img src="imagens/seta_esquerda.jpeg"> </a>
+
+  <div id="viewer">
+    <img id="prev" class="nav" src="imagens/seta_esquerda.png" alt="Anterior" />
+    <img id="slide" src="imagens/Slide1.png" alt="Slide" />
+    <img id="next" class="nav" src="imagens/seta_direita.png" alt="Próximo" />
+
+    <div id="bar">
+      <div id="counter">1 / 18</div>
+      <div id="actions">
+        <a class="btn" href="Portfolio_2026_Full.pdf" target="_blank" rel="noopener">Abrir PDF (com links)</a>
+        <a class="btn" href="Portfolio_2026_Full.pdf" download>Baixar PDF</a>
+      </div>
     </div>
-    <div id="setaDireita">
-        <a href="pagina_02.html"> <img src="imagens/seta_direita.jpeg"> </a>
-    </div>
+  </div>
+
+  <script>
+    let slideAtual = 1;
+    const totalSlides = 18;
+
+    const slideImg = document.getElementById("slide");
+    const prevBtn = document.getElementById("prev");
+    const nextBtn = document.getElementById("next");
+    const counter = document.getElementById("counter");
+
+    function atualizarSlide() {
+      slideImg.src = "imagens/Slide" + slideAtual + ".png";
+      counter.textContent = slideAtual + " / " + totalSlides;
+    }
+
+    function anterior() {
+      if (slideAtual > 1) {
+        slideAtual--;
+        atualizarSlide();
+      }
+    }
+
+    function proximo() {
+      if (slideAtual < totalSlides) {
+        slideAtual++;
+        atualizarSlide();
+      }
+    }
+
+    prevBtn.addEventListener("click", anterior);
+    nextBtn.addEventListener("click", proximo);
+
+    // Teclado
+    document.addEventListener("keydown", function(e) {
+      if (e.key === "ArrowLeft") anterior();
+      if (e.key === "ArrowRight") proximo();
+    });
+
+    // Clique no slide: lado esquerdo volta, lado direito avança
+    slideImg.addEventListener("click", function(e) {
+      const x = e.clientX;
+      if (x < window.innerWidth / 2) anterior();
+      else proximo();
+    });
+  </script>
+
 </body>
 </html>
